@@ -1,0 +1,55 @@
+{% extends 'base/main.html' %}
+{% block content %}
+<div class="container">
+    <div class="header">
+        {% if request.user.is_authenticated %}
+            <p class="username">Welcome,   {{ request.user }}</p>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Log Out</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="login-btn">Login</a>
+        {% endif %}
+    </div>
+
+    <div class="task-actions">
+        <a href="{% url 'task-create' %}" class="add-task">Add Task</a>
+        <form method="GET" class="search-form">
+            <input type="text" name="search-area" placeholder="Search tasks..." class="search-input">
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+    </div>
+
+    <table class="task-table">
+        <tr>
+            <th>Tasks</th>
+            <th>Status</th>
+            <th>View</th>
+            <th>Delete</th>
+        </tr>
+        {% for task in tasks %}
+        <tr class="task-row">
+            <td class="task-title {% if task.complete %}completed-task{% endif %}">{{ task.title }}</td>
+            <td>
+                {% if not task.complete %}
+                    <form action="{% url 'task-done' task.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="done-btn">Done</button>
+                    </form>
+                {% else %}
+                    <span class="done-text">Done..✔</span>
+                {% endif %}
+            </td>
+            <td><a href="{% url 'task' task.id %}" class="view-btn">View</a></td>
+            <td><a href="{% url 'task-delete' task.id %}" class="delete-btn">Delete</a></td>
+            
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="no-task">"Great results come from small actions. Plan your tasks and take the next step!"</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock content %}

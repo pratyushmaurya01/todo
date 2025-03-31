@@ -1,0 +1,22 @@
+{% extends 'base/main.html' %}
+{% load static %}  
+{% block style %}  
+    <link rel="stylesheet" href="{% static 'base/task_confirm_delete.css' %}"> 
+{% endblock style %} 
+
+{% block content %}
+<div class="delete-confirm-container">
+    <a href="{% url 'tasks' %}" class="back-link">Go Back</a>
+    
+    <form method="POST" class="delete-form">
+        {% csrf_token %}
+        <h3 class="delete-title">Confirm Deletion</h3>
+        <p class="delete-message">Are you sure you want to delete this task? <strong>"{{task}}"</strong></p>
+        
+        <div class="form-actions">
+            <input type="submit" value="Delete" class="delete-confirm-btn">
+            <a href="{% url 'tasks' %}" class="cancel-btn">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock content %}
